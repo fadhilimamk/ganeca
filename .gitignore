@@ -1,0 +1,11 @@
+# Files to ignore
+
+# Test binary, build with `go test -c`
+*.test
+
+bin/
+.vscode/
+ganeca
+
+# Handle for Mac user
+.DS_Store
