@@ -23,7 +23,7 @@ func InitConfiguration(filename string) error {
 	return nil
 }
 
-// InitConnection : Preparing connection for all.
+// InitConnection : Preparing connection for all in ganeca app.
 func InitConnection() error {
 
 	if Configuration.IsNull() {
