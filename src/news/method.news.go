@@ -36,9 +36,12 @@ func fecthItems() {
 			ChildrenFiltered("a").
 			ChildrenFiltered("strong").
 			Text()
-		date := global.GetCurrentTime()
+		dateString := meta.ChildrenFiltered("span").Text()
 		description := meta.ChildrenFiltered("p").Text()
 		image, _ := item.ChildrenFiltered(".col-md-2").ChildrenFiltered("a").ChildrenFiltered("img").Attr("src")
+
+		dateTime := global.DateStringToTime(dateString)
+		date := dateTime.Unix()
 
 		// fixing leading and trailing whitespace
 		description = strings.TrimSpace(description)

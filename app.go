@@ -43,7 +43,10 @@ func main() {
 	news.Init()
 
 	for i, item := range news.ItemData {
-		fmt.Printf("%d\t%s\n", i, item.Title)
+		fmt.Printf("%d\t%s\n", i, item.GetTitle())
+		fmt.Printf("\t\t%s\n", item.GetImage())
+		fmt.Printf("\t\t%d\n", item.GetDate())
+		fmt.Printf("\t\t%s\n\n", item.GetDescription())
 	}
 
 	fmt.Println("finish")
