@@ -6,7 +6,7 @@ import (
 
 	"github.com/fadhilimamk/ganeca/src/conf"
 	"github.com/fadhilimamk/ganeca/src/log"
-	"github.com/fadhilimamk/ganeca/src/students"
+	"github.com/fadhilimamk/ganeca/src/news"
 )
 
 func init() {
@@ -32,12 +32,18 @@ func init() {
 }
 
 func main() {
-	var data []students.Student
+	// var data []students.Student
 
-	data = students.GetAllStudents()
+	// data = students.GetAllStudents()
 
-	for _, student := range data {
-		fmt.Println(student.ToString())
+	// for _, student := range data {
+	// 	fmt.Println(student.ToString())
+	// }
+
+	news.Init()
+
+	for i, item := range news.ItemData {
+		fmt.Printf("%d\t%s\n", i, item.Title)
 	}
 
 	fmt.Println("finish")

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 )
 
 // ObjectToJSON convert object to json
@@ -15,4 +16,10 @@ func ObjectToJSON(p interface{}) string {
 	}
 
 	return string(bytes)
+}
+
+// GetCurrentTime return current time in unix format
+func GetCurrentTime() int64 {
+	t := time.Now()
+	return t.Unix()
 }
