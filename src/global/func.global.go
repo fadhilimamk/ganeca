@@ -29,7 +29,7 @@ func GetCurrentTime() int64 {
 
 // DateStringToTime convert date string in Bahasa Indonesia into time.
 // string that can be converted is simple date with with format dd MMM YYY
-// examle : 25 September 1997
+// example : 25 September 1997
 func DateStringToTime(date string) time.Time {
 	date = strings.ToLower(date)
 	date = strings.TrimSpace(date)
@@ -71,6 +71,28 @@ func DateStringToTime(date string) time.Time {
 	return time.Date(year, month, day, 0, 0, 0, 0, loc)
 }
 
+// CompleteDateStringToTime convert date string in Bahasa Indonesia into time.
+// example : Kamis, 25 September 1997, 18:08:52
+func CompleteDateStringToTime(date string) time.Time {
+	rawCompleteDate := strings.Split(date, ",")
+	result := DateStringToTime(rawCompleteDate[1])
+
+	rawClock := strings.TrimSpace(rawCompleteDate[2])
+	rawClockData := strings.Split(rawClock, ":")
+
+	hour, _ := strconv.Atoi(rawClockData[0])
+	minute, _ := strconv.Atoi(rawClockData[1])
+	second, _ := strconv.Atoi(rawClockData[2])
+
+	result.Add(time.Hour*time.Duration(hour) +
+		time.Minute*time.Duration(minute) +
+		time.Second*time.Duration(second))
+
+	result = time.Date(result.Year(), result.Month(), result.Day(), hour, minute, second, 0, result.Location())
+
+	return result
+}
+
 // RemoveDuplicateSpaceInString normalize string with redundant space.
 // Example to convert "Ini     adalah    kalimat" into "Ini adalah kalimat"
 func RemoveDuplicateSpaceInString(input string) string {
@@ -81,6 +103,7 @@ func RemoveDuplicateSpaceInString(input string) string {
 	return final
 }
 
+// Paginate : chunk interface data with offset and limit
 func Paginate(x []interface{}, offset int, limit int) []interface{} {
 	if offset > len(x) {
 		offset = len(x)

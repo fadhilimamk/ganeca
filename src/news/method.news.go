@@ -82,7 +82,7 @@ func fetchNews() {
 
 	log.Info("Fetching news item details ...")
 
-	for _, item := range ItemData {
+	for i, item := range ItemData {
 		doc, err := goquery.NewDocument(item.URL)
 		if err != nil {
 			log.Fatal(err)
@@ -90,12 +90,13 @@ func fetchNews() {
 
 		rawData := doc.Find(".view")
 
-		title := item.Title
-		image := item.Image
-		date := item.Date
 		rawAuthor := strings.TrimSpace(strings.Replace(rawData.Find(".date2").Text(), "\n", "", -1))
 		rawAuthor = global.RemoveDuplicateSpaceInString(rawAuthor)
 		authorRaw := strings.Split(rawAuthor, "-")
+
+		title := item.Title
+		image := item.Image
+		date := global.CompleteDateStringToTime(authorRaw[1]).Unix()
 		author := authorRaw[0]
 
 		// getting content
@@ -116,6 +117,9 @@ func fetchNews() {
 				images = append(images, img)
 			}
 		})
+
+		// Change item date into more complete time
+		ItemData[i].Date = date
 
 		NewsData[item.ID] = NewNews(title, author, date, content, image, images)
 	}
