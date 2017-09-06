@@ -5,9 +5,13 @@ import (
 	"os"
 
 	"github.com/fadhilimamk/ganeca/src/conf"
+	"github.com/fadhilimamk/ganeca/src/ganeca"
 	"github.com/fadhilimamk/ganeca/src/log"
 	"github.com/fadhilimamk/ganeca/src/news"
+	"github.com/gin-gonic/gin"
 )
+
+var router *gin.Engine
 
 func init() {
 
@@ -32,23 +36,17 @@ func init() {
 }
 
 func main() {
-	// var data []students.Student
 
-	// data = students.GetAllStudents()
+	gin.SetMode(conf.Configuration.Server.GINMODE)
+	router = gin.Default()
 
-	// for _, student := range data {
-	// 	fmt.Println(student.ToString())
-	// }
-
+	log.Info("Preparing data")
 	news.Init()
 
-	for i, item := range news.ItemData {
-		fmt.Printf("%d\t%s\n", i, item.GetTitle())
-		fmt.Printf("\t\t%s\n", item.GetImage())
-		fmt.Printf("\t\t%d\n", item.GetDate())
-		fmt.Printf("\t\t%s\n\n", item.GetDescription())
-	}
+	log.Info("Ambalwarsa is listening you on port ", conf.Configuration.Server.PORT)
 
-	fmt.Println("finish")
+	router.GET("/", ganeca.ListNewsHandler)
+
+	router.Run(conf.Configuration.Server.PORT)
 
 }

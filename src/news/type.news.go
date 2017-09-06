@@ -20,25 +20,29 @@ type Item struct {
 	date        int64
 	description string
 	image       string
+	url         string
 }
 
 // NewNews is method to create News object (constructor)
-func NewNews(title string, date int64, image string, content string) News {
+func NewNews(title string, author string, date int64, content string, image string, images []string) News {
 	return News{
 		title:   title,
+		author:  author,
 		date:    date,
-		image:   image,
 		content: content,
+		image:   image,
+		images:  images,
 	}
 }
 
 // NewItem is method to create Item object (constructor)
-func NewItem(title string, date int64, description string, image string) Item {
+func NewItem(title string, date int64, description string, image string, url string) Item {
 	return Item{
 		title:       title,
 		date:        date,
 		description: description,
 		image:       image,
+		url:         url,
 	}
 }
 
@@ -79,7 +83,17 @@ func (i Item) GetImage() string {
 	return i.image
 }
 
-// Setimage change item image
+// SetImage change item image
 func (i Item) SetImage(image string) {
 	i.image = image
+}
+
+// GetURL return item image
+func (i Item) GetURL() string {
+	return i.url
+}
+
+// SetURL change item image
+func (i Item) SetURL(url string) {
+	i.url = url
 }

@@ -1,6 +1,8 @@
 package news
 
 import (
+	"time"
+
 	"github.com/robfig/cron"
 )
 
@@ -9,6 +11,9 @@ var ItemData []Item
 
 // NewsData is in memory cache to store all crawled news data
 var NewsData []News
+
+// UpdatedAt is last crawled time
+var UpdatedAt time.Time
 
 func init() {
 	Source = "https://www.itb.ac.id/news/index/category/home"
@@ -22,5 +27,6 @@ func init() {
 func Init() {
 	if len(ItemData) == 0 {
 		fecthItems()
+		fetchNews()
 	}
 }
