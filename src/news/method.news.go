@@ -128,3 +128,16 @@ func fetchNews() {
 func GetNewsDetail(id int64) News {
 	return NewsData[id]
 }
+
+func Paginate(x []Item, offset int, limit int) []Item {
+	if offset > len(x) {
+		offset = len(x)
+	}
+
+	end := offset + limit
+	if end > len(x) {
+		end = len(x)
+	}
+
+	return x[offset:end]
+}

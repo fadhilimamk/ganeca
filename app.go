@@ -43,7 +43,7 @@ func main() {
 	log.Info("Preparing data")
 	news.Init()
 
-	log.Info("Ambalwarsa is listening you on port ", conf.Configuration.Server.PORT)
+	log.Info("Ganeca is listening you on port ", conf.Configuration.Server.PORT)
 
 	router.GET("/news", ganeca.ListNewsHandler)
 	router.GET("/news/:id", ganeca.NewsDetailHandler)

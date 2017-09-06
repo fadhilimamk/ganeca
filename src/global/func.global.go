@@ -80,3 +80,16 @@ func RemoveDuplicateSpaceInString(input string) string {
 	final = reInsideWhtsp.ReplaceAllString(final, " ")
 	return final
 }
+
+func Paginate(x []interface{}, offset int, limit int) []interface{} {
+	if offset > len(x) {
+		offset = len(x)
+	}
+
+	end := offset + limit
+	if end > len(x) {
+		end = len(x)
+	}
+
+	return x[offset:end]
+}

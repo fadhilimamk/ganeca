@@ -5,23 +5,23 @@ var Source string
 
 // News object represent detail of the news
 type News struct {
-	Title   string
-	Author  string
-	Date    int64
-	Content string
-	Image   string
-	Images  []string
+	Title   string   `json:"title"`
+	Author  string   `json:"author"`
+	Date    int64    `json:"date"`
+	Content string   `json:"content"`
+	Image   string   `json:"image"`
+	Images  []string `json:"images"`
 }
 
 // Item object represent small portion of the news.
 // Can be used for display data on list
 type Item struct {
-	ID          int64
-	Title       string
-	Date        int64
-	Description string
-	Image       string
-	URL         string
+	ID          int64  `json:"id"`
+	Title       string `json:"title"`
+	Date        int64  `json:"date"`
+	Description string `json:"description"`
+	Image       string `json:"image"`
+	URL         string `json:"url"`
 }
 
 // NewNews is method to create News object (constructor)
