@@ -2,7 +2,6 @@ package news
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -13,9 +12,13 @@ import (
 )
 
 func fecthItems() {
+
+	// Fetching All Item is atomic process, to avoid collision with fetchNews
+	mutex.Lock()
+
 	log.Info("Fetching news items ...")
 	start := time.Now()
-	ItemData = []Item{}
+	ItemDataResult := []Item{}
 
 	param := map[string][]string{
 		"tahun": []string{"2017"},
@@ -31,6 +34,7 @@ func fecthItems() {
 		log.Fatal(err)
 	}
 
+	var i int64
 	doc.Find(".p-t-b-10").Each(func(index int, item *goquery.Selection) {
 		meta := item.ChildrenFiltered(".col-md-10")
 
@@ -38,6 +42,7 @@ func fecthItems() {
 			ChildrenFiltered("a").
 			ChildrenFiltered("strong").
 			Text()
+
 		dateString := meta.ChildrenFiltered("span").Text()
 		description := meta.ChildrenFiltered("p").Text()
 		image, _ := item.ChildrenFiltered(".col-md-2").ChildrenFiltered("a").ChildrenFiltered("img").Attr("src")
@@ -50,30 +55,44 @@ func fecthItems() {
 		description = strings.TrimSpace(description)
 		description = strings.Replace(description, "\n", " ", -1)
 
-		newsItem := NewItem(title, date, description, image, url)
-		ItemData = append(ItemData, newsItem)
+		newsItem := NewItem(i, title, date, description, image, url)
+		if strings.TrimSpace(title) != "" {
+			ItemDataResult = append(ItemDataResult, newsItem)
+			i++
+		}
 
 	})
 
+	if len(ItemDataResult) > 0 {
+		ItemData = ItemDataResult
+	} else {
+		log.Info("Got empty news item data! Using older version instead")
+	}
+
 	log.Info("Finish fetching news items. Got ", len(ItemData), " items on ", (time.Now().Sub(start).Nanoseconds()), "ns")
 	UpdatedAt = time.Now()
+
+	mutex.Unlock()
+
 }
 
 func fetchNews() {
+
+	mutex.Lock()
+
 	log.Info("Fetching news item details ...")
-	NewsData = []News{}
 
 	for _, item := range ItemData {
-		doc, err := goquery.NewDocument(item.GetURL())
+		doc, err := goquery.NewDocument(item.URL)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		rawData := doc.Find(".view")
 
-		title := item.GetTitle()
-		image := item.GetImage()
-		date := item.GetDate()
+		title := item.Title
+		image := item.Image
+		date := item.Date
 		rawAuthor := strings.TrimSpace(strings.Replace(rawData.Find(".date2").Text(), "\n", "", -1))
 		rawAuthor = global.RemoveDuplicateSpaceInString(rawAuthor)
 		authorRaw := strings.Split(rawAuthor, "-")
@@ -98,17 +117,14 @@ func fetchNews() {
 			}
 		})
 
-		NewsData = append(NewsData, NewNews(title, author, date, content, image, images))
+		NewsData[item.ID] = NewNews(title, author, date, content, image, images)
 	}
 
-	for i, item := range NewsData {
-		fmt.Printf("#%d\t%s\n", i, item.title)
-		fmt.Printf("\t%s\n", item.author)
-		fmt.Printf("\t%d\n", item.date)
-		fmt.Printf("\t%s\n", item.content)
-		fmt.Printf("\t%s\n", item.image)
-		fmt.Println(item.images)
-		fmt.Println()
-	}
+	mutex.Unlock()
 
+}
+
+// GetNewsDetail return news with specific id
+func GetNewsDetail(id int64) News {
+	return NewsData[id]
 }

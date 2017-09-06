@@ -45,7 +45,8 @@ func main() {
 
 	log.Info("Ambalwarsa is listening you on port ", conf.Configuration.Server.PORT)
 
-	router.GET("/", ganeca.ListNewsHandler)
+	router.GET("/news", ganeca.ListNewsHandler)
+	router.GET("/news/:id", ganeca.NewsDetailHandler)
 
 	router.Run(conf.Configuration.Server.PORT)
 
