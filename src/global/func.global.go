@@ -66,9 +66,7 @@ func DateStringToTime(date string) time.Time {
 		month = time.December
 	}
 
-	loc, _ := time.LoadLocation("Asia/Jakarta")
-
-	return time.Date(year, month, day, 0, 0, 0, 0, loc)
+	return MakeSimpleDate(year, month, day)
 }
 
 // CompleteDateStringToTime convert date string in Bahasa Indonesia into time.
@@ -91,6 +89,45 @@ func CompleteDateStringToTime(date string) time.Time {
 	result = time.Date(result.Year(), result.Month(), result.Day(), hour, minute, second, 0, result.Location())
 
 	return result
+}
+
+// ShortMonthToMonth convert short month to month, ex Sep to September
+func ShortMonthToMonth(shortMonth string) time.Month {
+	shortMonth = strings.ToLower(shortMonth)
+	switch shortMonth {
+	case "jan":
+		return time.January
+	case "feb":
+		return time.February
+	case "mar":
+		return time.March
+	case "apr":
+		return time.April
+	case "may":
+		return time.May
+	case "jun":
+		return time.June
+	case "jul":
+		return time.July
+	case "aug":
+		return time.August
+	case "sep":
+		return time.September
+	case "oct":
+		return time.October
+	case "nov":
+		return time.November
+	case "dec":
+		return time.December
+	}
+
+	return time.January
+}
+
+// MakeSimpleDate is helper method to get time that only consist with year, month, and day
+func MakeSimpleDate(year int, month time.Month, day int) time.Time {
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+	return time.Date(year, month, day, 0, 0, 0, 0, loc)
 }
 
 // RemoveDuplicateSpaceInString normalize string with redundant space.

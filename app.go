@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fadhilimamk/ganeca/src/agenda"
+
 	"github.com/fadhilimamk/ganeca/src/conf"
 	"github.com/fadhilimamk/ganeca/src/ganeca"
 	"github.com/fadhilimamk/ganeca/src/log"
-	"github.com/fadhilimamk/ganeca/src/news"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,12 +42,14 @@ func main() {
 	router = gin.Default()
 
 	log.Info("Preparing data")
-	news.Init()
+	// news.Init()
+	agenda.Init()
 
 	log.Info("Ganeca is listening you on port ", conf.Configuration.Server.PORT)
 
 	router.GET("/news", ganeca.ListNewsHandler)
 	router.GET("/news/:id", ganeca.NewsDetailHandler)
+	router.GET("events/", ganeca.ListEventsHandler)
 
 	router.Run(conf.Configuration.Server.PORT)
 

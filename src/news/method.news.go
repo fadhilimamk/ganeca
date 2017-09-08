@@ -80,6 +80,11 @@ func fetchNews() {
 
 	mutex.Lock()
 
+	if len(ItemData) == 0 {
+		log.Error("News item data is empty!")
+		return
+	}
+
 	log.Info("Fetching news item details ...")
 
 	for i, item := range ItemData {
